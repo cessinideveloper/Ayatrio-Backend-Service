@@ -5,7 +5,7 @@ const router = require("express").Router();
 router.get("/google",passport.authenticate("google",{scope:["profile","email"]}));
 
 router.get("/google/callback",passport.authenticate("google",{
-    successRedirect:"http://localhost:3000/home",
+    successRedirect:"http://localhost:3000/profile",
     failureRedirect:"http://localhost:3000/login"
 }))
 
@@ -18,10 +18,21 @@ router.get("/login/sucess",async(req,res)=>{
     }
 })
 
+// Endpoint to check user authentication status
+router.get('/user', (req, res) => {
+    if (req.isAuthenticated()) {
+      // User is authenticated, send user information
+      res.json({ isAuthenticated: true, user: req.user });
+    } else {
+      // User is not authenticated
+      res.json({ isAuthenticated: false, user: null });
+    }
+  });
+
 router.get("/logout",(req,res,next)=>{
     req.logout(function(err){
         if(err){return next(err)}
-        res.redirect("http://localhost:3000/login");
+        res.redirect("http://localhost:3000/home");
     })
 })
 
