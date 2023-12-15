@@ -1,44 +1,38 @@
 const preferencesDB = require('../model/Preferences');
-const ProductDB = require('../model/Category');
+const categoriesDB = require('../model/Category');
 const citiesAndHobbiesDB = require('../model/CityHobbie');
+const productsDB = require('../model/Products');
 
+// POST: api/preferences
 exports.preferences = async (req, res) => {
   try {
     if (!req.body) {
       return res.status(406).send("Please provide category data");
     }
 
-    const { deviceId, categoryName, WallpaperSubCategory, FlooringSubCategory, BlindsSubCategory, CurtainsSubCategory, SportSubCategory } = req.body;
+    const { deviceId, preferredCities,preferredHobbies,preferredCategories } = req.body;
 
-    if (!deviceId || !categoryName) {
+    if (!deviceId) {
       return res.status(406).send("Fill in all the fields");
     }
 
     const newPreference = new preferencesDB({
       deviceId,
-      categoryName,
-      WallpaperSubCategory,
-      FlooringSubCategory,
-      BlindsSubCategory,
-      CurtainsSubCategory,
-      SportSubCategory,
+      preferredCities,preferredHobbies,preferredCategories
     });
 
     const userPreferences = await newPreference.save();
 
-    const recommendedProducts = await preferencesDB.find({
-      categoryName: { $in: categoryName }
-    }).limit(5); 
-
-    res.status(200).json( recommendedProducts );
+    res.status(200).json( userPreferences );
   } catch (error) {
-    res.status(500).json({ err: error.message || "Error while saving category!" });
+    res.status(500).json({ err: error.message || "Error while saving user preferences!" });
   }
 };
 
+// GET: api/categories
 exports.getCategories = async (req,res) =>{
   try {
-    const allCategoriesData = await ProductDB.find();
+    const allCategoriesData = await categoriesDB.find();
 
      // Check if there are no categories found
      if (!allCategoriesData || allCategoriesData.length === 0) {
@@ -52,6 +46,26 @@ exports.getCategories = async (req,res) =>{
   }
 }
 
+// POST: api/createProduct
+exports.createProduct = async (req,res)=>{
+  try {
+    if(!req.body){
+      return res.status(406).send("Please provide product data");
+    }
+
+    const product = req.body;
+
+    // const newProduct =  new productsDB(product);
+
+    const productData = await productsDB.insertMany(product);
+
+    res.status(201).send(productData)
+  } catch (error) {
+    res.status(500).json({ err: error.message || "Error while creating new product!" });
+  }
+}
+
+// GET: api/citiesAndHobbies
 exports.getCitiesAndHobbies = async (req,res)=>{
   try {
     const citiesAndHobbie = await citiesAndHobbiesDB.find();
@@ -67,33 +81,45 @@ exports.getCitiesAndHobbies = async (req,res)=>{
   }
 }
 
-exports.saveCategories = async (req,res)=>{
+
+// GET: api/getRecommendation
+exports.getRecommendation = async (req, res) => {
   try {
-    const { categories } = req.body;
+    const deviceId = req.query.deviceId;
 
-    // Validate the request body against the schema
-    const newProduct = new ProductDB({ categories });
-    const savedProduct = await newProduct.save();
+    const userPreferences = await preferencesDB.find({ deviceId });
 
-    res.status(201).json(savedProduct);
+    if (!userPreferences || userPreferences.length === 0) {
+      // Handle the case where no preferences are found for the given device ID
+      return res.status(404).json({ error: 'Preferences not found' });
+    }
+
+    const { preferredCities, preferredHobbies, preferredCategories } = userPreferences[0];
+
+    function combineSubcategories(categories) {
+      let combinedSubcategories = [];
+    
+      categories.forEach(category => {
+        combinedSubcategories = combinedSubcategories.concat(category.subcategories);
+      });
+    
+      return combinedSubcategories;
+    }
+
+    let subcategoriesArray = combineSubcategories(preferredCategories);
+
+    console.log(subcategoriesArray);
+    console.log(preferredCategories);
+
+    const products = await productsDB.find({
+      subcategory: { $in: subcategoriesArray.map(sub => new RegExp(sub, 'i')) }
+    });
+
+    res.json(products);
+
   } catch (error) {
     console.error(error);
+    // Handle other errors
     res.status(500).json({ error: 'Internal Server Error' });
   }
-}
-
-exports.saveCitiesAndHobbies = async (req,res)=>{
-  try {
-    const data = req.body;
-    console.log(data);
-
-    // Validate the request body against the schema
-    const newData = new citiesAndHobbiesDB( data );
-    const savedData = await newData.save();
-
-    res.status(201).json(savedData);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-}
+};

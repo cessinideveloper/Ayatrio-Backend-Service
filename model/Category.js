@@ -23,13 +23,13 @@ const categorySchema = new mongoose.Schema({
   },
 });
 
-const productSchema = new mongoose.Schema({
+const productCategorySchema = new mongoose.Schema({
   categories: {
     type: [categorySchema],
     required: true,
   },
 });
 
-const Product = mongoose.model('Product', productSchema);
+const categoriesDB = mongoose.model('ProductCategories', productCategorySchema);
 
-module.exports = Product;
+module.exports = categoriesDB;

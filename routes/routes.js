@@ -5,8 +5,11 @@ router.get('/categories',controller.getCategories);
 router.get('/citiesAndHobbies',controller.getCitiesAndHobbies);
 
 router.post('/preferences',controller.preferences);
+router.post('/createProduct',controller.createProduct);
 
-// ✔❌ not necessary - only for development purpose
+router.get('/getRecommendation',controller.getRecommendation);
+
+// ✔❌ not necessary - only for development purpose (one Time Use)
 // router.post('/saveCategories',controller.saveCategories);
 // router.post('/saveCitiesAndHobbies',controller.saveCitiesAndHobbies);
 
