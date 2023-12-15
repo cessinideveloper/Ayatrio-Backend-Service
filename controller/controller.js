@@ -10,70 +10,34 @@ exports.preferences = async (req, res) => {
       return res.status(400).json({ error: "Please provide category data" });
     }
 
-    const { deviceId, userPreferredCities, userPreferredHobbies, userPreferredCategories } = req.body;
+    const { deviceId, preferredCities, preferredHobbies, preferredCategories } = req.body;
 
-    console.log(deviceId, userPreferredCities, userPreferredHobbies, userPreferredCategories);
-    if (!deviceId || !userPreferredCities || !userPreferredHobbies || !userPreferredCategories) {
+    if (!deviceId || !preferredCities || !preferredCategories) {
       return res.status(400).json({ error: "Fill in all the required fields" });
     }
 
     const newPreference = new preferencesDB({
       deviceId,
-      preferredCities: userPreferredCities,
-      preferredHobbies: userPreferredHobbies,
-      preferredCategories: userPreferredCategories,
+      preferredCities,
+      preferredHobbies,
+      preferredCategories,
     });
 
     const userPreferences = await newPreference.save();
-    console.log("hey", userPreferences);
 
-    if (!userPreferences || userPreferences.length === 0) {
-      return res.status(404).json({ error: 'Preferences not found' });
-    }
-
-    const { preferredCities, preferredHobbies, preferredCategories } = userPreferences;
-
-    if (!preferredCities || !preferredHobbies || !preferredCategories) {
-      return res.status(404).json({ error: 'Invalid user preferences structure' });
-    }
-
-    const subcategoriesArray = combineSubcategories(preferredCategories);
-
-    console.log(subcategoriesArray);
-    console.log(preferredCategories);
-
-    const products = await productsDB.find({
-      subcategory: { $in: subcategoriesArray.map(sub => new RegExp(sub, 'i')) }
-    });
-
-    res.status(201).json({ products});
-
+    res.status(201).json({ message: "Preferences saved successfully", deviceId });
+    
   } catch (error) {
     console.error(error);
 
     if (error.code === 11000) {
-      return res.status(409).json({ error: "Duplicate entry for deviceId" });
+      // Duplicate key error
+      return res.status(409).json({ error: "Duplicate entry for deviceId", deviceId });
     }
 
     res.status(500).json({ error: "Error while saving user preferences", details: error.message });
   }
 };
-
-// ---------------------------------
-
-function combineSubcategories(categories) {
-  let combinedSubcategories = [];
-  
-  categories.forEach(category => {
-    combinedSubcategories = combinedSubcategories.concat(category.subcategories);
-  });
-  
-  return combinedSubcategories;
-}
-
-
-// ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐
-
 // GET: api/categories
 exports.getCategories = async (req,res) =>{
   try {
