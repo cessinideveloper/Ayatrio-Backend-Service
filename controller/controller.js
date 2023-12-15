@@ -7,28 +7,37 @@ const productsDB = require('../model/Products');
 exports.preferences = async (req, res) => {
   try {
     if (!req.body) {
-      return res.status(406).send("Please provide category data");
+      return res.status(400).json({ error: "Please provide category data" });
     }
 
-    const { deviceId, preferredCities,preferredHobbies,preferredCategories } = req.body;
+    const { deviceId, preferredCities, preferredHobbies, preferredCategories } = req.body;
 
-    if (!deviceId) {
-      return res.status(406).send("Fill in all the fields");
+    if (!deviceId || !preferredCities || !preferredCategories) {
+      return res.status(400).json({ error: "Fill in all the required fields" });
     }
 
     const newPreference = new preferencesDB({
       deviceId,
-      preferredCities,preferredHobbies,preferredCategories
+      preferredCities,
+      preferredHobbies,
+      preferredCategories,
     });
 
     const userPreferences = await newPreference.save();
 
-    res.status(200).json( userPreferences );
+    res.status(201).json({ message: "Preferences saved successfully", deviceId });
+    
   } catch (error) {
-    res.status(500).json({ err: error.message || "Error while saving user preferences!" });
+    console.error(error);
+
+    if (error.code === 11000) {
+      // Duplicate key error
+      return res.status(409).json({ error: "Duplicate entry for deviceId", deviceId });
+    }
+
+    res.status(500).json({ error: "Error while saving user preferences", details: error.message });
   }
 };
-
 // GET: api/categories
 exports.getCategories = async (req,res) =>{
   try {
