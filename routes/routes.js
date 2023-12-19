@@ -13,4 +13,11 @@ router.get('/getRecommendation',controller.getRecommendation);
 // router.post('/saveCategories',controller.saveCategories);
 // router.post('/saveCitiesAndHobbies',controller.saveCitiesAndHobbies);
 
+
+// ---------------------------------------
+
+router.post('/checkout', controller.checkout);
+
+router.post('/order', controller.order);
+
 module.exports = router

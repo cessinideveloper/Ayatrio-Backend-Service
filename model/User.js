@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
+    deviceId:String,
     googleId:String,
     displayName:String,
     email:String,
