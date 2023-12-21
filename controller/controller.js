@@ -3,7 +3,7 @@ const categoriesDB = require("../model/Category");
 const citiesAndHobbiesDB = require("../model/CityHobbie");
 const productsDB = require("../model/Products");
 const CartDB = require("../model/Cart");
-const SliderDB  = require('../model/Slider');
+const SliderDB  = require("../model/Slider");
 
 // POST: api/preferences
 exports.preferences = async (req, res) => {
@@ -340,6 +340,7 @@ exports.createImgCircle = async (req,res)=>{
     res.status(500).json({ error: "Internal Server Error" });
   }
 }
+
 
 exports.getSliderCircle = async(req,res)=>{
   try {
