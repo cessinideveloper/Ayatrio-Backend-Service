@@ -22,5 +22,9 @@ router.post('/order', controller.order);
 router.post('/cart',controller.createCart);
 router.get('/cart',controller.getCart);
 
+// home
+router.post('/createImgCricle',controller.createImgCircle);
+router.get('/getImgCircle',controller.getSliderCircle);
+
 
 module.exports = router

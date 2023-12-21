@@ -3,6 +3,7 @@ const categoriesDB = require("../model/Category");
 const citiesAndHobbiesDB = require("../model/CityHobbie");
 const productsDB = require("../model/Products");
 const CartDB = require("../model/Cart");
+const SliderDB  = require('../model/Slider');
 
 // POST: api/preferences
 exports.preferences = async (req, res) => {
@@ -329,3 +330,22 @@ exports.getCart = async (req, res) => {
     res.status(500).send(error);
   }
 };
+
+
+exports.createImgCircle = async (req,res)=>{
+  try {
+    const slider = await SliderDB.create(req.body);
+    res.status(201).json(slider);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
+exports.getSliderCircle = async(req,res)=>{
+  try {
+    const sliders = await SliderDB.find();
+    res.status(200).json(sliders);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
