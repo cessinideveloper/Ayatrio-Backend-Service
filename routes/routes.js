@@ -32,5 +32,8 @@ router.get('/getMidInfoSection',controller.getMidInfoSection);
 router.post('/createHeaderInfoSection',controller.createHeaderInfoSection);
 router.get('/getHeaderInfoSection',controller.getHeaderInfoSection);
 
+router.post('/createImgSection',controller.createImgSection);
+router.get('/getImgSection',controller.getImgSection);
+
 
 module.exports = router
