@@ -26,5 +26,11 @@ router.get('/cart',controller.getCart);
 router.post('/createImgCricle',controller.createImgCircle);
 router.get('/getImgCircle',controller.getSliderCircle);
 
+router.post('/createMidInfoSection',controller.createMidInfoSection);
+router.get('/getMidInfoSection',controller.getMidInfoSection);
+
+router.post('/createHeaderInfoSection',controller.createHeaderInfoSection);
+router.get('/getHeaderInfoSection',controller.getHeaderInfoSection);
+
 
 module.exports = router

@@ -4,6 +4,8 @@ const citiesAndHobbiesDB = require("../model/CityHobbie");
 const productsDB = require("../model/Products");
 const CartDB = require("../model/Cart");
 const SliderDB  = require("../model/Slider");
+const MidInfoSectionDB = require("../model/MidSection");
+const HeaderInfoDB = require("../model/Header");
 
 // POST: api/preferences
 exports.preferences = async (req, res) => {
@@ -341,11 +343,50 @@ exports.createImgCircle = async (req,res)=>{
   }
 }
 
-
 exports.getSliderCircle = async(req,res)=>{
   try {
     const sliders = await SliderDB.find();
     res.status(200).json(sliders);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
+// --------------------
+
+exports.createMidInfoSection = async (req,res)=>{
+  try {
+    const info = await MidInfoSectionDB.create(req.body);
+    res.status(201).json(info);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
+exports.getMidInfoSection = async(req,res)=>{
+  try {
+    const info = await MidInfoSectionDB.find();
+    res.status(200).json(info);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
+// --------------------
+
+exports.createHeaderInfoSection = async (req,res)=>{
+  try {
+    const info = await HeaderInfoDB.create(req.body);
+    res.status(201).json(info);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}
+
+exports.getHeaderInfoSection = async(req,res)=>{
+  try {
+    const info = await HeaderInfoDB.find();
+    res.status(200).json(info);
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }
