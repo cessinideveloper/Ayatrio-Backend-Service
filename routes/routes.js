@@ -17,7 +17,10 @@ router.get('/getRecommendation',controller.getRecommendation);
 // ---------------------------------------
 
 router.post('/checkout', controller.checkout);
-
 router.post('/order', controller.order);
+
+router.post('/cart',controller.createCart);
+router.get('/cart',controller.getCart);
+
 
 module.exports = router
