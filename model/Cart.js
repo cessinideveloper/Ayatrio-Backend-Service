@@ -3,7 +3,7 @@ const ObjectID = mongoose.Schema.Types.ObjectId
 
 const cartSchema = new mongoose.Schema({
     owner: {
-      type: ObjectID,
+      type: String,
       required: true,
       ref: "users",
     },
