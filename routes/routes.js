@@ -1,54 +1,64 @@
 const router = require("express").Router();
 const controller = require("../controller/controller");
+const homePageController = require("../controller/homePage");
+const cartController = require("../controller/cart");
+const productController = require("../controller/products");
+const recommendationController = require("../controller/recommendation");
+const trendingController = require("../controller/trending");
+const orderController = require("../controller/order");
 
-// categories of products
-router.get("/categories", controller.getCategories);
-router.get("/citiesAndHobbies", controller.getCitiesAndHobbies);
+
+// ❌ not necessary - only for development purpose (one Time Use)
+// router.post('/saveCategories',controller.saveCategories);
+// router.post('/saveCitiesAndHobbies',controller.saveCitiesAndHobbies);
+// router.get("/categories", controller.getCategories);
+// router.get("/citiesAndHobbies", controller.getCitiesAndHobbies);
+
 
 // recommendation engine
 router
-  .post("/preferences", controller.preferences)
-  .get("/getRecommendation", controller.getRecommendation);
-
-// ✔❌ not necessary - only for development purpose (one Time Use)
-// router.post('/saveCategories',controller.saveCategories);
-// router.post('/saveCitiesAndHobbies',controller.saveCitiesAndHobbies);
+  .post("/preferences", recommendationController.preferences)
+  .get("/getRecommendation", recommendationController.getRecommendation);
 
 // ---------------------------------------
 
-router.post("/checkout", controller.checkout);
-router.post("/order", controller.order);
+router.post("/checkout", orderController.checkout);
+router.post("/order", orderController.order);
 
 // cart
-router.post("/cart", controller.createCart).get("/cart", controller.getCart);
+router.post("/cart", cartController.createCart)
+      .get("/cart", cartController.getCart);
 
 // home
 router
-  .post("/createImgCricle", controller.createImgCircle)
-  .get("/getImgCircle", controller.getSliderCircle);
+  .post("/createImgCricle", homePageController.createImgCircle)
+  .get("/getImgCircle", homePageController.getSliderCircle);
 
 router
-  .post("/createMidInfoSection", controller.createMidInfoSection)
-  .get("/getMidInfoSection", controller.getMidInfoSection);
+  .post("/createMidInfoSection", homePageController.createMidInfoSection)
+  .get("/getMidInfoSection", homePageController.getMidInfoSection);
 
 router
-  .post("/createHeaderInfoSection", controller.createHeaderInfoSection)
-  .get("/getHeaderInfoSection", controller.getHeaderInfoSection);
+  .post("/createHeaderInfoSection", homePageController.createHeaderInfoSection)
+  .get("/getHeaderInfoSection", homePageController.getHeaderInfoSection);
 
 router
-  .post("/createImgSection", controller.createImgSection)
-  .get("/getImgSection", controller.getImgSection);
+  .post("/createImgSection", homePageController.createImgSection)
+  .get("/getImgSection", homePageController.getImgSection);
+
+
 
 // trending products
 router
-  .post("/increment-popularity", controller.incrementPopularity) // increment the popularity of a product
-  .get("/trending-products", controller.trendingProducts); // fetch trending products
+  .post("/increment-popularity", trendingController.incrementPopularity) // increment the popularity of a product
+  .get("/trending-products", trendingController.trendingProducts); // fetch trending products
+
 
 // ---------------- product endpoints
 router
-  .post("/createProduct", controller.createProduct)
-  .get("/products", controller.fetchAllProducts)
-  .get("/getSingleProduct", controller.fetchProductById)
-  .delete("/products", controller.deleteProductById);
+  .post("/createProduct", productController.createProduct)
+  .get("/products", productController.fetchAllProducts)
+  .get("/getSingleProduct", productController.fetchProductById)
+  .delete("/products", productController.deleteProductById);
 
 module.exports = router;
