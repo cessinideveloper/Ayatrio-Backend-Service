@@ -35,5 +35,11 @@ router.get('/getHeaderInfoSection',controller.getHeaderInfoSection);
 router.post('/createImgSection',controller.createImgSection);
 router.get('/getImgSection',controller.getImgSection);
 
+// increment the popularity of a product
+router.post('/increment-popularity',controller.incrementPopularity);
+
+// fetch trending products
+router.get('/trending-products',controller.trendingProducts)
+
 
 module.exports = router
