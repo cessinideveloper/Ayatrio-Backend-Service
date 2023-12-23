@@ -4,11 +4,13 @@ const circleSchema = new mongoose.Schema({
   productTitle: String,
   productCategory: String,
   price: Number,
+  topPosition:Number,
+  leftPosition:Number
 });
 
 const SliderSchema = new mongoose.Schema({
   id: Number,
-  imgSrc: { type: [String] },
+  imgSrc: { type: String },
   circles: { type: [circleSchema] },
 });
 
