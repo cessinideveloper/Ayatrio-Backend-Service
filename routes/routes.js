@@ -11,8 +11,9 @@ const orderController = require("../controller/order");
 // ❌ not necessary - only for development purpose (one Time Use)
 // router.post('/saveCategories',controller.saveCategories);
 // router.post('/saveCitiesAndHobbies',controller.saveCitiesAndHobbies);
-// router.get("/categories", controller.getCategories);
-// router.get("/citiesAndHobbies", controller.getCitiesAndHobbies);
+
+router.get("/categories", controller.getCategories);
+router.get("/citiesAndHobbies", controller.getCitiesAndHobbies);
 
 
 // recommendation engine
