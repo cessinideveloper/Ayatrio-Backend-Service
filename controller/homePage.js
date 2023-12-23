@@ -10,7 +10,7 @@ exports.createImgCircle = async (req,res)=>{
     const slider = await SliderDB.create(req.body);
     res.status(201).json(slider);
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json(error);
   }
 }
 

@@ -12,4 +12,4 @@ const SliderSchema = new mongoose.Schema({
   circles: { type: [circleSchema] },
 });
 
-module.exports = SliderDB = mongoose.model("Product", SliderSchema);
+module.exports = SliderDB = mongoose.model("Slider", SliderSchema);
