@@ -15,9 +15,15 @@ exports.createImgCircle = async (req,res)=>{
 }
 
 exports.getSliderCircle = async(req,res)=>{
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 3;
+  const skip = (page - 1) * limit;
+  const lastIndex = page * limit;
   try {
     const sliders = await SliderDB.find();
-    res.status(200).json(sliders);
+    let result = sliders.slice(skip, lastIndex);
+    console.log(result.length);
+    res.status(200).json(result);
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }
