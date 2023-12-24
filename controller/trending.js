@@ -15,14 +15,20 @@ exports.incrementPopularity = async (req, res) => {
   }
 };
 
-// GET 'api/increment-popularity/:productId'
+// GET 'api/trending-products'
 exports.trendingProducts = async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 3;
+  const skip = (page - 1) * limit;
+  const lastIndex = page * limit;
   try {
     const trendingProducts = await productsDB.find({ popularity: { $gt: 2 } })
       .sort({ popularity: -1 })
       .limit(5); 
-
-    res.json(trendingProducts);
+    let result = trendingProducts.slice(skip, lastIndex);
+    console.log(result.length);
+    res.json(result);
+    // res.json(trendingProducts);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
