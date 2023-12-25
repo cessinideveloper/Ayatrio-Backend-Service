@@ -6,6 +6,7 @@ const productController = require("../controller/products");
 const recommendationController = require("../controller/recommendation");
 const trendingController = require("../controller/trending");
 const orderController = require("../controller/order");
+const mapController = require("../controller/mapcontroller");
 
 
 // ❌ not necessary - only for development purpose (one Time Use)
@@ -61,5 +62,8 @@ router
   .get("/products", productController.fetchAllProducts)
   .get("/getSingleProduct", productController.fetchProductById)
   .delete("/products", productController.deleteProductById);
-
+//------------------map endpoints
+router
+.post("/createMapPlaces",mapController.createMapPlaces)
+.get("/mapPlaces",mapController.getMapPlaces)
 module.exports = router;
