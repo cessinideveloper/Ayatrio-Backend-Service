@@ -7,6 +7,7 @@ const recommendationController = require("../controller/recommendation");
 const trendingController = require("../controller/trending");
 const orderController = require("../controller/order");
 const mapController = require("../controller/mapcontroller");
+const  ProfileContentController = require("../controller/profileContent");
 
 
 // ❌ not necessary - only for development purpose (one Time Use)
@@ -66,4 +67,10 @@ router
 router
 .post("/createMapPlaces",mapController.createMapPlaces)
 .get("/mapPlaces",mapController.getMapPlaces)
+.delete("/mapPlaces/:id",mapController.deleteMapPlaces);
+// ----------------- profileContent
+router
+.post("/createProfileContent", ProfileContentController.createProfileContent)
+.get("/profileContent", ProfileContentController.getProfileContent);
+
 module.exports = router;
