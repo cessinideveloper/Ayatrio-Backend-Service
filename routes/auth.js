@@ -64,6 +64,20 @@ router.put('/update-profile', verifyToken, async (req, res) => {
   }
 });
 
+// Delete user profile
+router.delete('/delete-profile', verifyToken, async (req, res) => {
+  try {
+  const googleId = req.user.id;
+
+  await userDB.findOneAndDelete({ googleId });
+  res.json({ message: 'Profile deleted successfully' });
+  } catch (error) {
+  console.error(error);
+  res.status(500).json({ message: 'Internal server error' });
+  }
+ });
+ 
+
 router.get("/logout", (req, res, next) => {
   req.logout(function (err) {
     if (err) { return next(err) }
