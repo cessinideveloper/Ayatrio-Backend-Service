@@ -63,11 +63,13 @@ router
   .get("/products", productController.fetchAllProducts)
   .get("/getSingleProduct", productController.fetchProductById)
   .delete("/products", productController.deleteProductById);
+
 //------------------map endpoints
 router
 .post("/createMapPlaces",mapController.createMapPlaces)
 .get("/mapPlaces",mapController.getMapPlaces)
 .delete("/mapPlaces/:id",mapController.deleteMapPlaces);
+
 // ----------------- profileContent
 router
 .post("/createProfileContent", ProfileContentController.createProfileContent)

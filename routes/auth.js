@@ -15,48 +15,6 @@ router.get('/google/callback',
     res.redirect(`http://localhost:3000/profile?token=${token}`);
   });
 
-// Update user account
-router.put("/user/update", verifyToken, async (req, res) => {
-  try {
-    const { userId, updatedData } = req.body;
-
-    // Ensure the user is updating their own account
-    if (userId !== req.user._id.toString()) {
-      return res.status(403).json({ success: false, message: "Unauthorized to update this user" });
-    }
-
-    const updatedUser = await User.findByIdAndUpdate(userId, updatedData, { new: true });
-    res.json({ success: true, user: updatedUser });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
-
-// Delete user account
-router.delete("/user/delete", verifyToken, async (req, res) => {
-  try {
-    const userId = req.body.userId;
-
-    // Ensure the user is deleting their own account
-    if (userId !== req.user._id.toString()) {
-      return res.status(403).json({ success: false, message: "Unauthorized to delete this user" });
-    }
-
-    await User.findByIdAndDelete(userId);
-    res.json({ success: true, message: "User deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
-
-router.get("/login/sucess", async (req, res) => {
-
-  if (req.user) {
-    res.status(200).json({ message: "user Login", user: req.user })
-  } else {
-    res.status(400).json({ message: "Not Authorized" })
-  }
-})
 
 // Endpoint to check user authentication status
 router.get('/user', (req, res) => {
