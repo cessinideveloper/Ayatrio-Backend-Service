@@ -8,6 +8,7 @@ const trendingController = require("../controller/trending");
 const orderController = require("../controller/order");
 const mapController = require("../controller/mapcontroller");
 const  ProfileContentController = require("../controller/profileContent");
+const VirtualExperience = require("../controller/VIrtualExperiance");
 
 
 // ❌ not necessary - only for development purpose (one Time Use)
@@ -74,5 +75,9 @@ router
 router
 .post("/createProfileContent", ProfileContentController.createProfileContent)
 .get("/profileContent", ProfileContentController.getProfileContent);
+//------------------VE endpoints
+router
+.get("/getVEFilter", VirtualExperience.virtualExperianceFilterData)
+.get("/getVE", VirtualExperience.getVirtualExperianceFields)
 
 module.exports = router;

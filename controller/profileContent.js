@@ -10,7 +10,7 @@ const getProfileContent = async (req, res) => {
 };
 const createProfileContent = async (req, res) => {
     const profileData = req.body; 
-  
+  x
     try {
       const savedProfileContent = await ProfileContentDb.insertMany(profileData);
       res.json(savedProfileContent);
