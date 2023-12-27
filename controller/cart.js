@@ -5,10 +5,11 @@ const CartDB = require("../model/Cart");
 
 // POST '/api/cart'
 exports.createCart = async (req, res) => {
-  // const owner = req.user._id;
-  const deviceId = req.deviceId;
 
-  const { productId, quantity, owner } = req.body;
+  // const deviceId = req.deviceId;
+  const owner = req.user.id;
+
+  const { productId, quantity } = req.body;
 
   try {
     const cart = await CartDB.findOne({ owner });
@@ -64,9 +65,9 @@ exports.createCart = async (req, res) => {
 };
 
 exports.getCart = async (req, res) => {
-  const owner = req.body;
+  const googleId = req.user.id;
   try {
-    const cart = await CartDB.findOne({ owner });
+    const cart = await CartDB.findOne({ owner:googleId });
     if (cart && cart.items.length > 0) {
       res.status(200).send(cart);
     } else {

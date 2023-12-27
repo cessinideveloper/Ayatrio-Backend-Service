@@ -9,6 +9,7 @@ const orderController = require("../controller/order");
 const mapController = require("../controller/mapcontroller");
 const  ProfileContentController = require("../controller/profileContent");
 const VirtualExperience = require("../controller/VIrtualExperiance");
+const verifyToken = require("../middleware/verifyToken");
 
 
 // ❌ not necessary - only for development purpose (one Time Use)
@@ -30,8 +31,8 @@ router.post("/checkout", orderController.checkout);
 router.post("/order", orderController.order);
 
 // cart
-router.post("/cart", cartController.createCart)
-      .get("/cart", cartController.getCart);
+router.post("/cart", verifyToken, cartController.createCart)
+      .get("/cart",verifyToken, cartController.getCart);
 
 // home
 router
