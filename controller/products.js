@@ -22,7 +22,14 @@ exports.createProduct = async (req, res) => {
     }
   };
 
-  exports.fetchAllProducts = async (req, res) => {
+// GET  '/api/products'
+exports.fetchAllProducts = async (req, res) => {
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 4;
+
+    const skip = (page - 1) * limit;
+
     let query = productsDB.find({});
 
     // Search functionality
@@ -54,7 +61,7 @@ exports.createProduct = async (req, res) => {
     }
 
     try {
-        const docs = await query.exec();
+        const docs = await query.skip(skip).limit(limit).exec();
         res.status(200).json(docs);
     } catch (err) {
         res.status(400).json(err);
