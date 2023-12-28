@@ -34,8 +34,11 @@ require('./config/passport')(passport);
 // passport auth routes
 app.use('/auth',require('./routes/auth'));
 
-// oter routes
+// other routes
 app.use('/api',require('./routes/routes'));
+
+// admin routes
+app.use('/admin',require('./routes/admin'));
 
 app.listen(process.env.PORT,()=>{
     console.log(`server started on http://localhost:${process.env.PORT}`)
