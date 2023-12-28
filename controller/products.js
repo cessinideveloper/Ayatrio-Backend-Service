@@ -24,10 +24,8 @@ exports.createProduct = async (req, res) => {
 
 // GET  '/api/products'
 exports.fetchAllProducts = async (req, res) => {
-
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 4;
-
     const skip = (page - 1) * limit;
 
     let query = productsDB.find({});
@@ -39,20 +37,53 @@ exports.fetchAllProducts = async (req, res) => {
             $or: [
                 { productName: { $regex: new RegExp(search, "i") } },
                 { category: { $regex: new RegExp(search, "i") } },
+                { roomCategory: { $regex: new RegExp(search, "i") } },
                 { subcategory: { $regex: new RegExp(search, "i") } },
                 { colors: { $regex: new RegExp(search, "i") } }
             ]
         });
     }
 
-    // Filter by category
+    // Filter by category (standalone)
     if (req.query.category) {
         query = query.find({ category: req.query.category });
     }
 
-    // Filter by label
-    if (req.query.label) {
-        query = query.find({ label: req.query.label });
+    // Filter by roomCategory (standalone)
+    if (req.query.roomCategory) {
+        query = query.find({ roomCategory: req.query.roomCategory });
+    }
+
+    // Filter by category and colors (combination)  -> for dropdown
+    if (req.query.category && req.query.colors) {
+        query = query.find({
+            category: req.query.category,
+            colors: { $regex: new RegExp(req.query.colors, "i") }
+        });
+    }
+
+    // Filter by category and roomCategory (combination)  -> for dropdown
+    if (req.query.category && req.query.roomCategory) {
+        query = query.find({
+            category: req.query.category,
+            roomCategory: req.query.roomCategory
+        });
+    }
+
+     // Filter by category and collection (combination)  -> for dropdown
+     if (req.query.category && req.query.collection) {
+        query = query.find({
+            category: req.query.category,
+            collectionName: req.query.collection
+        });
+    }
+
+     // Filter by category and style (combination)  -> for dropdown
+     if (req.query.category && req.query.style) {
+        query = query.find({
+            category: req.query.category,
+            style: req.query.style
+        });
     }
 
     // Sorting
@@ -67,6 +98,7 @@ exports.fetchAllProducts = async (req, res) => {
         res.status(400).json(err);
     }
 };
+
 
 
 // fetch particular product

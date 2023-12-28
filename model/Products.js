@@ -7,6 +7,7 @@ const productSchema = new mongoose.Schema({
   roomCategory: { type: String, required: true },
   category: { type: String, required: true },
   subcategory: { type: String, required: true },
+  style: { type: String },
   collectionName: { type: String},
   images: { type: [String] },
   perUnitPrice: { type: Number },
