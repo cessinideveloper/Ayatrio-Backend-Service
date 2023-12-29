@@ -8,9 +8,12 @@ exports.createProduct = async (req, res) => {
         return res.status(406).send("Please provide product data");
       }
   
-      const product = req.body;
+      const {title,patternNumber,room,collection,color,designStyle,category,subCategory,units,unitType,totalPricePerUnit,perUnitType,perUnitPrice,dimensions,images} = req.body;
+      console.log(product);
   
-      // const newProduct =  new productsDB(product);
+      const newProduct =  new productsDB({
+        
+      });
   
       const productData = await productsDB.insertMany(product);
   
