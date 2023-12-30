@@ -28,6 +28,27 @@ exports.getSliderCircle = async(req,res)=>{
   }
 }
 
+exports.deleteSliderCircle =  async (req, res) => {
+  const circleId = req.params.circleId;
+
+  try {
+    // Assuming YourModel is your Mongoose model representing the slider circles
+    const result = await SliderDB.findOneAndDelete({ _id: circleId });
+
+    if (!result) {
+      return res.status(404).json({ message: 'Circle not found' });
+    }
+
+    // Fetch updated data after deletion
+    const updatedData = await SliderDB.find();
+
+    res.json(updatedData);
+  } catch (error) {
+    console.error('Error deleting circle:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 // --------------------
 
 exports.createMidInfoSection = async (req,res)=>{
@@ -47,6 +68,27 @@ exports.getMidInfoSection = async(req,res)=>{
     res.status(500).json({ error: "Internal Server Error" });
   }
 }
+
+exports.deleteMidInfoSection =  async (req, res) => {
+  const midInfoId = req.params.midInfoId;
+
+  try {
+    // Assuming YourModel is your Mongoose model representing the slider circles
+    const result = await MidInfoSectionDB.findOneAndDelete({ _id: midInfoId });
+
+    if (!result) {
+      return res.status(404).json({ message: 'Circle not found' });
+    }
+
+    // Fetch updated data after deletion
+    const updatedData = await MidInfoSectionDB.find();
+
+    res.json(updatedData);
+  } catch (error) {
+    console.error('Error deleting circle:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
 // --------------------
 

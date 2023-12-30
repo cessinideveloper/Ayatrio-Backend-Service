@@ -37,11 +37,13 @@ router.post("/cart", verifyToken, cartController.createCart)
 // home
 router
   .post("/createImgCricle", homePageController.createImgCircle)
-  .get("/getImgCircle", homePageController.getSliderCircle);
+  .get("/getImgCircle", homePageController.getSliderCircle)
+  .delete('/deleteSliderCircle/:circleId',homePageController.deleteSliderCircle)
 
 router
   .post("/createMidInfoSection", homePageController.createMidInfoSection)
-  .get("/getMidInfoSection", homePageController.getMidInfoSection);
+  .get("/getMidInfoSection", homePageController.getMidInfoSection)
+  .delete("/deleteMidSection/:midInfoId",homePageController.deleteMidInfoSection)
 
 router
   .post("/createHeaderInfoSection", homePageController.createHeaderInfoSection)
