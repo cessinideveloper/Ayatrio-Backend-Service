@@ -9,13 +9,28 @@ exports.createProduct = async (req, res) => {
       }
   
       const {title,patternNumber,room,collection,color,designStyle,category,subCategory,units,unitType,totalPricePerUnit,perUnitType,perUnitPrice,dimensions,images} = req.body;
-      console.log(product);
+    //   console.log(title,patternNumber,room,collection,color,designStyle,category,subCategory,units,unitType,totalPricePerUnit,perUnitType,perUnitPrice,dimensions,images);
   
       const newProduct =  new productsDB({
-        
+        productTitle:title,
+        productId:patternNumber,
+        patternNumber,
+        roomCategory:room,
+        category,
+        subcategory:subCategory,
+        style:designStyle,
+        collectionName:collection,
+        images,
+        perUnitPrice,
+        colors:color,
+        dimensions,
+        units,
+        unitType,
+        perUnitType,
+        totalPrice:totalPricePerUnit,
       });
   
-      const productData = await productsDB.insertMany(product);
+      const productData = await newProduct.save();
   
       res.status(201).send(productData);
     } catch (error) {
