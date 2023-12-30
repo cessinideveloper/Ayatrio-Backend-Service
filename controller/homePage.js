@@ -32,7 +32,6 @@ exports.deleteSliderCircle =  async (req, res) => {
   const circleId = req.params.circleId;
 
   try {
-    // Assuming YourModel is your Mongoose model representing the slider circles
     const result = await SliderDB.findOneAndDelete({ _id: circleId });
 
     if (!result) {
@@ -73,7 +72,6 @@ exports.deleteMidInfoSection =  async (req, res) => {
   const midInfoId = req.params.midInfoId;
 
   try {
-    // Assuming YourModel is your Mongoose model representing the slider circles
     const result = await MidInfoSectionDB.findOneAndDelete({ _id: midInfoId });
 
     if (!result) {
@@ -109,6 +107,25 @@ exports.getHeaderInfoSection = async(req,res)=>{
     res.status(500).json({ error: "Internal Server Error" });
   }
 }
+exports.deleteHeaderInfoSection =  async (req, res) => {
+  const headerId = req.params.headerId;
+
+  try {
+    const result = await HeaderInfoDB.findOneAndDelete({ _id: headerId });
+
+    if (!result) {
+      return res.status(404).json({ message: 'Header card not found' });
+    }
+
+    // Fetch updated data after deletion
+    const updatedData = await HeaderInfoDB.find();
+
+    res.json(updatedData);
+  } catch (error) {
+    console.error('Error deleting header section:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
 // --------------------
 
@@ -129,4 +146,24 @@ exports.getImgSection = async(req,res)=>{
     res.status(500).json({ error: "Internal Server Error" });
   }
 }
+exports.deleteImgSection =  async (req, res) => {
+  const imgSectionId = req.params.imgSectionId;
+
+  try {
+    // Assuming YourModel is your Mongoose model representing the slider circles
+    const result = await ImgSchemaDB.findOneAndDelete({ _id: imgSectionId });
+
+    if (!result) {
+      return res.status(404).json({ message: 'Circle not found' });
+    }
+
+    // Fetch updated data after deletion
+    const updatedData = await ImgSchemaDB.find();
+
+    res.json(updatedData);
+  } catch (error) {
+    console.error('Error deleting images section:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
 

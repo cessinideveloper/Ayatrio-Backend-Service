@@ -47,11 +47,14 @@ router
 
 router
   .post("/createHeaderInfoSection", homePageController.createHeaderInfoSection)
-  .get("/getHeaderInfoSection", homePageController.getHeaderInfoSection);
+  .get("/getHeaderInfoSection", homePageController.getHeaderInfoSection)
+  .delete('/deleteHeaderInfoSection/:headerId', homePageController.deleteHeaderInfoSection);
 
-router
+  
+  router
   .post("/createImgSection", homePageController.createImgSection)
-  .get("/getImgSection", homePageController.getImgSection);
+  .get("/getImgSection", homePageController.getImgSection)
+  .delete('deleteImgSection/:imgId',homePageController.deleteImgSection);
 
 
 
