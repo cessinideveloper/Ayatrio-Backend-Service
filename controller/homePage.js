@@ -8,7 +8,7 @@ const ImgSchemaDB = require("../model/ImgSection");
 exports.createImgCircle = async (req,res)=>{
   try {
     const slider = await SliderDB.create(req.body);
-    res.status(201).json(slider);
+    res.status(201).json({message:"Slider created successfully!..."});
   } catch (error) {
     res.status(500).json(error);
   }
@@ -53,7 +53,7 @@ exports.deleteSliderCircle =  async (req, res) => {
 exports.createMidInfoSection = async (req,res)=>{
   try {
     const info = await MidInfoSectionDB.create(req.body);
-    res.status(201).json(info);
+    res.status(201).json({message:"Mid Section added successfully! "});
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }
@@ -93,7 +93,7 @@ exports.deleteMidInfoSection =  async (req, res) => {
 exports.createHeaderInfoSection = async (req,res)=>{
   try {
     const info = await HeaderInfoDB.create(req.body);
-    res.status(201).json(info);
+    res.status(201).json({message:"Header card information  added successfully! "});
   } catch (error) {
     res.status(500).send(error);
   }
@@ -132,7 +132,7 @@ exports.deleteHeaderInfoSection =  async (req, res) => {
 exports.createImgSection = async (req,res)=>{
   try {
     const info = await ImgSchemaDB.create(req.body);
-    res.status(201).json(info);
+    res.status(201).json({message:"Images Section added successfully! "});
   } catch (error) {
     res.status(500).send(error);
   }

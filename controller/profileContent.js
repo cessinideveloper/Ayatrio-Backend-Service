@@ -10,10 +10,9 @@ const getProfileContent = async (req, res) => {
 };
 const createProfileContent = async (req, res) => {
     const profileData = req.body; 
-  x
     try {
       const savedProfileContent = await ProfileContentDb.insertMany(profileData);
-      res.json(savedProfileContent);
+      res.json({message:"Team Memeber saved successfully! "});
     } catch (error) {
       res.status(400).json({ message: error.message });
     }

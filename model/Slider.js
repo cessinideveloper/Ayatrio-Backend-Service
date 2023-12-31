@@ -9,7 +9,6 @@ const circleSchema = new mongoose.Schema({
 });
 
 const SliderSchema = new mongoose.Schema({
-  id: Number,
   imgSrc: { type: String },
   circles: { type: [circleSchema] },
 });
