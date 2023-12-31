@@ -134,20 +134,22 @@ exports.fetchProductById = async (req, res) => {
 // delete particular product by ID
 exports.deleteProductById = async (req, res) => {
   try {
-      const { id } = req.query;
+      const productId = req.params.productId;
 
       // Check if the provided ID is valid
-      if (!id) {
+      if (!productId) {
           return res.status(400).json({ error: 'Product ID is missing.' });
       }
 
-      const deletedProduct = await productsDB.findByIdAndDelete({ _id: id });
+      const deletedProduct = await productsDB.findByIdAndDelete({ _id: productId });
 
       if (!deletedProduct) {
           return res.status(404).json({ error: 'Product not found.' });
       }
 
-      res.status(200).json({ message: 'Product deleted successfully.' });
+      const updatedData = await productsDB.find();
+
+      res.status(200).json(updatedData);
   } catch (error) {
       console.error('Error while deleting product:', error);
       res.status(500).json({ error: 'An error occurred while deleting the product.' });

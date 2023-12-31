@@ -69,7 +69,7 @@ router
   .post("/createProduct", productController.createProduct)
   .get("/products", productController.fetchAllProducts)
   .get("/getSingleProduct", productController.fetchProductById)
-  .delete("/products", productController.deleteProductById);
+  .delete("/products/:productId", productController.deleteProductById);
 
 //------------------map endpoints
 router
