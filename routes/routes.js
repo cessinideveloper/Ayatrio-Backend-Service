@@ -54,7 +54,7 @@ router
   router
   .post("/createImgSection", homePageController.createImgSection)
   .get("/getImgSection", homePageController.getImgSection)
-  .delete('deleteImgSection/:imgId',homePageController.deleteImgSection);
+  .delete('/deleteImgSection/:imgId',homePageController.deleteImgSection);
 
 
 
@@ -80,7 +80,8 @@ router
 // ----------------- profileContent
 router
 .post("/createProfileContent", ProfileContentController.createProfileContent)
-.get("/profileContent", ProfileContentController.getProfileContent);
+.get("/profileContent", ProfileContentController.getProfileContent)
+.delete("/profileContent/:profileId", ProfileContentController.deleteProfileById);
 //------------------VE endpoints
 router
 .get("/getVEFilter", VirtualExperience.virtualExperianceFilterData)

@@ -18,5 +18,27 @@ const createProfileContent = async (req, res) => {
       res.status(400).json({ message: error.message });
     }
   };
+
+
+  const deleteProfileById = async (req, res) => {
+    const profileId = req.params.profileId;
   
-module.exports = { getProfileContent, createProfileContent };
+    try {
+      // Assuming YourModel is your Mongoose model representing the slider circles
+      const result = await ProfileContentDb.findOneAndDelete({ _id: profileId });
+  
+      if (!result) {
+        return res.status(404).json({ message: 'profile not found' });
+      }
+  
+      // Fetch updated data after deletion
+      const updatedData = await ProfileContentDb.find();
+  
+      res.json(updatedData);
+    } catch (error) {
+      console.error('Error deleting profiles section:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+  
+module.exports = { getProfileContent, createProfileContent,deleteProfileById };

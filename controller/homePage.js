@@ -147,14 +147,14 @@ exports.getImgSection = async(req,res)=>{
   }
 }
 exports.deleteImgSection =  async (req, res) => {
-  const imgSectionId = req.params.imgSectionId;
+  const imgId = req.params.imgId;
 
   try {
     // Assuming YourModel is your Mongoose model representing the slider circles
-    const result = await ImgSchemaDB.findOneAndDelete({ _id: imgSectionId });
+    const result = await ImgSchemaDB.findOneAndDelete({ _id: imgId });
 
     if (!result) {
-      return res.status(404).json({ message: 'Circle not found' });
+      return res.status(404).json({ message: 'Image not found' });
     }
 
     // Fetch updated data after deletion
