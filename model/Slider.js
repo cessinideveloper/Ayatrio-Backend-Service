@@ -5,7 +5,8 @@ const circleSchema = new mongoose.Schema({
   productCategory: String,
   price: Number,
   topPosition:Number,
-  leftPosition:Number
+  leftPosition:Number,
+  productLink:String
 });
 
 const SliderSchema = new mongoose.Schema({

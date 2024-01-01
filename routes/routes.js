@@ -51,10 +51,15 @@ router
   .delete('/deleteHeaderInfoSection/:headerId', homePageController.deleteHeaderInfoSection);
 
   
-  router
+router
   .post("/createImgSection", homePageController.createImgSection)
   .get("/getImgSection", homePageController.getImgSection)
   .delete('/deleteImgSection/:imgId',homePageController.deleteImgSection);
+
+router
+  .post("/gridImg", homePageController.createImgGrid)
+  .get("/gridImg", homePageController.getImgGrid)
+  .delete('/gridImg/:imgGridId',homePageController.deleteImgGrid);
 
 
 
