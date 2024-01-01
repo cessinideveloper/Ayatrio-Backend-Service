@@ -131,14 +131,13 @@ exports.getRecommendation = async (req, res) => {
 
     console.log(subcategoriesArray);
     console.log(preferredCategories);
-
+const TotalProducts = await productsDB.find();
     const products = await productsDB.find({
       subcategory: {
         $in: subcategoriesArray.map((sub) => new RegExp(sub, "i")),
       },
     });
-
-    res.json(products);
+    res.json({ products, length: products.length });
   } catch (error) {
     console.error(error);
     // Handle other errors
