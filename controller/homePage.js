@@ -1,34 +1,35 @@
-const SliderDB  = require("../model/Slider");
+const SliderDB = require("../model/Slider");
 const MidInfoSectionDB = require("../model/MidSection");
 const HeaderInfoDB = require("../model/Header");
 const ImgSchemaDB = require("../model/ImgSection");
 
 // -------------------------------
 
-exports.createImgCircle = async (req,res)=>{
+exports.createImgCircle = async (req, res) => {
   try {
     const slider = await SliderDB.create(req.body);
-    res.status(201).json({message:"Slider created successfully!..."});
+    res.status(201).json({ message: "Slider created successfully!..." });
   } catch (error) {
     res.status(500).json(error);
   }
 }
 
-exports.getSliderCircle = async(req,res)=>{
+exports.getSliderCircle = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 3;
   const skip = (page - 1) * limit;
   const lastIndex = page * limit;
   try {
     const sliders = await SliderDB.find();
+    const length = sliders.length;
     let result = sliders.slice(skip, lastIndex);
-    res.status(200).json(result);
+    res.status(200).json({result, length });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }
 }
 
-exports.deleteSliderCircle =  async (req, res) => {
+exports.deleteSliderCircle = async (req, res) => {
   const circleId = req.params.circleId;
 
   try {
@@ -50,16 +51,16 @@ exports.deleteSliderCircle =  async (req, res) => {
 
 // --------------------
 
-exports.createMidInfoSection = async (req,res)=>{
+exports.createMidInfoSection = async (req, res) => {
   try {
     const info = await MidInfoSectionDB.create(req.body);
-    res.status(201).json({message:"Mid Section added successfully! "});
+    res.status(201).json({ message: "Mid Section added successfully! " });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }
 }
 
-exports.getMidInfoSection = async(req,res)=>{
+exports.getMidInfoSection = async (req, res) => {
   try {
     const info = await MidInfoSectionDB.find();
     res.status(200).json(info);
@@ -68,7 +69,7 @@ exports.getMidInfoSection = async(req,res)=>{
   }
 }
 
-exports.deleteMidInfoSection =  async (req, res) => {
+exports.deleteMidInfoSection = async (req, res) => {
   const midInfoId = req.params.midInfoId;
 
   try {
@@ -90,16 +91,16 @@ exports.deleteMidInfoSection =  async (req, res) => {
 
 // --------------------
 
-exports.createHeaderInfoSection = async (req,res)=>{
+exports.createHeaderInfoSection = async (req, res) => {
   try {
     const info = await HeaderInfoDB.create(req.body);
-    res.status(201).json({message:"Header card information  added successfully! "});
+    res.status(201).json({ message: "Header card information  added successfully! " });
   } catch (error) {
     res.status(500).send(error);
   }
 }
 
-exports.getHeaderInfoSection = async(req,res)=>{
+exports.getHeaderInfoSection = async (req, res) => {
   try {
     const info = await HeaderInfoDB.find();
     res.status(200).json(info);
@@ -107,7 +108,7 @@ exports.getHeaderInfoSection = async(req,res)=>{
     res.status(500).json({ error: "Internal Server Error" });
   }
 }
-exports.deleteHeaderInfoSection =  async (req, res) => {
+exports.deleteHeaderInfoSection = async (req, res) => {
   const headerId = req.params.headerId;
 
   try {
@@ -129,16 +130,16 @@ exports.deleteHeaderInfoSection =  async (req, res) => {
 
 // --------------------
 
-exports.createImgSection = async (req,res)=>{
+exports.createImgSection = async (req, res) => {
   try {
     const info = await ImgSchemaDB.create(req.body);
-    res.status(201).json({message:"Images Section added successfully! "});
+    res.status(201).json({ message: "Images Section added successfully! " });
   } catch (error) {
     res.status(500).send(error);
   }
 }
 
-exports.getImgSection = async(req,res)=>{
+exports.getImgSection = async (req, res) => {
   try {
     const info = await ImgSchemaDB.find();
     res.status(200).json(info);
@@ -146,7 +147,7 @@ exports.getImgSection = async(req,res)=>{
     res.status(500).json({ error: "Internal Server Error" });
   }
 }
-exports.deleteImgSection =  async (req, res) => {
+exports.deleteImgSection = async (req, res) => {
   const imgId = req.params.imgId;
 
   try {
