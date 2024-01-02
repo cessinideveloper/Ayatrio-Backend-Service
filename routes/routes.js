@@ -1,4 +1,10 @@
 const router = require("express").Router();
+
+// import middleware
+const verifyToken = require("../middleware/verifyToken");
+const upload = require("../middleware/uploadImage"); 
+
+// import controllers
 const controller = require("../controller/controller");
 const homePageController = require("../controller/homePage");
 const cartController = require("../controller/cart");
@@ -7,9 +13,8 @@ const recommendationController = require("../controller/recommendation");
 const trendingController = require("../controller/trending");
 const orderController = require("../controller/order");
 const mapController = require("../controller/mapcontroller");
-const  ProfileContentController = require("../controller/profileContent");
+const ProfileContentController = require("../controller/profileContent");
 const VirtualExperience = require("../controller/VIrtualExperiance");
-const verifyToken = require("../middleware/verifyToken");
 
 
 // ❌ not necessary - only for development purpose (one Time Use)
@@ -32,34 +37,34 @@ router.post("/order", orderController.order);
 
 // cart
 router.post("/cart", verifyToken, cartController.createCart)
-      .get("/cart",verifyToken, cartController.getCart);
+  .get("/cart", verifyToken, cartController.getCart);
 
 // home
 router
   .post("/createImgCricle", homePageController.createImgCircle)
   .get("/getImgCircle", homePageController.getSliderCircle)
-  .delete('/deleteSliderCircle/:circleId',homePageController.deleteSliderCircle)
+  .delete('/deleteSliderCircle/:circleId', homePageController.deleteSliderCircle)
 
 router
   .post("/createMidInfoSection", homePageController.createMidInfoSection)
   .get("/getMidInfoSection", homePageController.getMidInfoSection)
-  .delete("/deleteMidSection/:midInfoId",homePageController.deleteMidInfoSection)
+  .delete("/deleteMidSection/:midInfoId", homePageController.deleteMidInfoSection)
 
 router
   .post("/createHeaderInfoSection", homePageController.createHeaderInfoSection)
   .get("/getHeaderInfoSection", homePageController.getHeaderInfoSection)
   .delete('/deleteHeaderInfoSection/:headerId', homePageController.deleteHeaderInfoSection);
 
-  
+
 router
   .post("/createImgSection", homePageController.createImgSection)
   .get("/getImgSection", homePageController.getImgSection)
-  .delete('/deleteImgSection/:imgId',homePageController.deleteImgSection);
+  .delete('/deleteImgSection/:imgId', homePageController.deleteImgSection);
 
 router
   .post("/gridImg", homePageController.createImgGrid)
   .get("/gridImg", homePageController.getImgGrid)
-  .delete('/gridImg/:imgGridId',homePageController.deleteImgGrid);
+  .delete('/gridImg/:imgGridId', homePageController.deleteImgGrid);
 
 
 
@@ -71,25 +76,33 @@ router
 
 // ---------------- product endpoints
 router
-  .post("/createProduct", productController.createProduct)
+  .post("/createProduct", upload.array('image', 4), productController.createProduct)
   .get("/products", productController.fetchAllProducts)
   .get("/getSingleProduct", productController.fetchProductById)
   .delete("/products/:productId", productController.deleteProductById);
 
 //------------------map endpoints
 router
-.post("/createMapPlaces",mapController.createMapPlaces)
-.get("/mapPlaces",mapController.getMapPlaces)
-.delete("/mapPlaces/:id",mapController.deleteMapPlaces);
+  .post("/createMapPlaces", mapController.createMapPlaces)
+  .get("/mapPlaces", mapController.getMapPlaces)
+  .delete("/mapPlaces/:id", mapController.deleteMapPlaces);
 
 // ----------------- profileContent
 router
-.post("/createProfileContent", ProfileContentController.createProfileContent)
-.get("/profileContent", ProfileContentController.getProfileContent)
-.delete("/profileContent/:profileId", ProfileContentController.deleteProfileById);
+  .post("/createProfileContent", ProfileContentController.createProfileContent)
+  .get("/profileContent", ProfileContentController.getProfileContent)
+  .delete("/profileContent/:profileId", ProfileContentController.deleteProfileById);
+
 //------------------VE endpoints
 router
-.get("/getVEFilter", VirtualExperience.virtualExperianceFilterData)
-.get("/getVE", VirtualExperience.getVirtualExperianceFields)
+  .get("/getVEFilter", VirtualExperience.virtualExperianceFilterData)
+  .get("/getVE", VirtualExperience.getVirtualExperianceFields)
+
+// // image upload to S3 
+// router.post('/upload', upload.array('image', 4), (req, res, next) => {
+//   const imageUrls = req.files.map(file => file.location);
+//   res.json({ message: 'Images uploaded successfully', imageUrls });
+// });
+
 
 module.exports = router;
