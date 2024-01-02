@@ -78,6 +78,7 @@ router
 router
   .post("/createProduct", uploadImage.array('image', 4), productController.createProduct)
   .get("/products", productController.fetchAllProducts)
+  .get("/relatedProducts", productController.fetchProductsByCategory)
   .get("/getSingleProduct", productController.fetchProductById)
   .delete("/products/:productId", productController.deleteProductById);
 

@@ -187,3 +187,19 @@ exports.deleteProductById = async (req, res) => {
         res.status(500).json({ error: 'An error occurred while deleting the product.' });
     }
 };
+
+exports.fetchProductsByCategory = async (req, res) => {
+    const category = req.query.category;
+
+    if (!category) {
+        return res.status(400).json({ error: 'Category is missing.' });
+    }
+
+    try {
+        const products = await productsDB.find({ category });
+        res.status(200).json(products);
+    } catch (error) {
+        console.error('Error while fetching products by category:', error);
+        res.status(500).json({ error: 'An error occurred while fetching products by category.' });
+    }
+}
