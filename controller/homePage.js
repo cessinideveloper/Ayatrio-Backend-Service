@@ -181,15 +181,9 @@ exports.createImgGrid = async (req, res) => {
 }
 
 exports.getImgGrid = async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 3;
-  const skip = (page - 1) * limit;
-  const lastIndex = page * limit;
   try {
     const imgGrid = await ImgGridDB.find();
-    const length = imgGrid.length;
-    let result = imgGrid.slice(skip, lastIndex);
-    res.status(200).json({result, length });
+    res.status(200).json(imgGrid);
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }
@@ -197,7 +191,6 @@ exports.getImgGrid = async (req, res) => {
 
 exports.deleteImgGrid = async (req, res) => {
   const imgGridId = req.params.imgGridId;
-  console.log(imgGridId);
 
   try {
     const result = await ImgGridDB.findOneAndDelete({ _id: imgGridId });
