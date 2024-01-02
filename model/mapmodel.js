@@ -23,6 +23,16 @@ const mapSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  thumbnail: {
+    type: String,
+    required: true,
+  },
+  images: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
 });
 
 mapSchema.index({ 'geo_location.latitude': 1, 'geo_location.longitude': 1 }, { unique: true });
