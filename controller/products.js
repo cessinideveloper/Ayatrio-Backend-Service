@@ -72,7 +72,6 @@ exports.createProduct = async (req, res) => {
     }
 };
 
-
 // GET  '/api/products'
 exports.fetchAllProducts = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
