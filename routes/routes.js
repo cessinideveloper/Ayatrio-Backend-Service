@@ -2,7 +2,7 @@ const router = require("express").Router();
 
 // import middleware
 const verifyToken = require("../middleware/verifyToken");
-const upload = require("../middleware/uploadImage"); 
+const { uploadImage } = require("../middleware/uploadImage");
 
 // import controllers
 const controller = require("../controller/controller");
@@ -76,7 +76,7 @@ router
 
 // ---------------- product endpoints
 router
-  .post("/createProduct", upload.array('image', 4), productController.createProduct)
+  .post("/createProduct", uploadImage.array('image', 4), productController.createProduct)
   .get("/products", productController.fetchAllProducts)
   .get("/getSingleProduct", productController.fetchProductById)
   .delete("/products/:productId", productController.deleteProductById);

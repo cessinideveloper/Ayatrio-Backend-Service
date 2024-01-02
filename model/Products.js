@@ -8,7 +8,7 @@ const productSchema = new mongoose.Schema({
   category: { type: String, required: true },
   subcategory: { type: String, required: true },
   style: { type: String },
-  collectionName: { type: String},
+  collectionName: { type: String },
   images: { type: [String] },
   perUnitPrice: { type: Number },
   ratings: [{
@@ -69,6 +69,17 @@ const productSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  purchaseMode: [String],
+  productDescription: String,
+  coreValues: {
+    type: [{
+      heading: String,
+      text: String
+    }]
+  },
+  features: { type: [String] },
+  pdf: { type: String },
+  maintainanceDetails: { type: String }
 });
 
 const Product = mongoose.model("products", productSchema);

@@ -1,31 +1,43 @@
-const productsDB  = require("../model/Products");
+const productsDB = require("../model/Products");
 
 // POST: api/createProduct
 exports.createProduct = async (req, res) => {
     try {
-        const imageUrls = req.files.map(file => file.location);
+        // Extract image and PDF URLs from req.files
+        const imageUrls = req.files
+            .filter((file) => file.fieldname === 'image')
+            .map((file) => file.location);
+
+        // const pdfUrl = req.file.fieldname === 'pdf' ? req.file.location : null;
+        // console.log("pdf", pdfUrl);
 
         if (!req.body) {
             return res.status(406).send("Please provide product data");
         }
 
-        const { title, patternNumber, room, collection, color, designStyle, category, subCategory, units, unitType, totalPricePerUnit, perUnitType, perUnitPrice, dimensions, images } = req.body;
-        //   console.log(title,patternNumber,room,collection,color,designStyle,category,subCategory,units,unitType,totalPricePerUnit,perUnitType,perUnitPrice,dimensions,images);
-        
+        const {
+            title, patternNumber, room, collection, color, designStyle,
+            category, subCategory, units, unitType, totalPricePerUnit,
+            perUnitType, perUnitPrice, dimensions, purchaseMode,
+            productDescription, coreValues, features, maintainanceDetails
+        } = req.body;
+
+        const formattedFeatures = features.map(item => item.feature);
+
         const structuredDimensions = {
             "length": {
                 "value": dimensions.length.value,
                 "unit": dimensions.length.unit
-              },
-              "width": {
+            },
+            "width": {
                 "value": dimensions.width.value,
                 "unit": dimensions.width.unit
-              },
-              "thickness": {
+            },
+            "thickness": {
                 "value": dimensions.thickness.value,
                 "unit": dimensions.thickness.unit
-              }
-        }
+            }
+        };
 
         const newProduct = new productsDB({
             productTitle: title,
@@ -39,21 +51,27 @@ exports.createProduct = async (req, res) => {
             images: imageUrls,
             perUnitPrice,
             colors: color,
-            dimensions:structuredDimensions,
+            dimensions: structuredDimensions,
             units,
             unitType,
             perUnitType,
             totalPrice: totalPricePerUnit,
+            purchaseMode,
+            productDescription,
+            coreValues,
+            features:formattedFeatures,
+            maintainanceDetails,
+            //   pdf: pdfUrl, 
         });
 
         const productData = await newProduct.save();
 
         res.status(201).json({ message: "New Product created successfully!...." });
-
     } catch (error) {
         res.status(500).json({ err: error.message || "Error while creating new product!" });
     }
 };
+
 
 // GET  '/api/products'
 exports.fetchAllProducts = async (req, res) => {
