@@ -173,7 +173,6 @@ exports.createImgSection = async (req, res) => {
       .map((file) => file.location);
 
     const { text } = req.body;
-    console.log(text);
 
     const imageInfo = new ImgSchemaDB({
       img: imageUrl.join(''),

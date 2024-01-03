@@ -90,7 +90,7 @@ router
 
 // ----------------- profileContent
 router
-  .post("/createProfileContent", ProfileContentController.createProfileContent)
+  .post("/createProfileContent", uploadImage.array('image',1), ProfileContentController.createProfileContent)
   .get("/profileContent", ProfileContentController.getProfileContent)
   .delete("/profileContent/:profileId", ProfileContentController.deleteProfileById);
 
