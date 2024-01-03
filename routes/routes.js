@@ -41,7 +41,7 @@ router.post("/cart", verifyToken, cartController.createCart)
 
 // home
 router
-  .post("/createImgCricle", homePageController.createImgCircle)
+  .post("/createImgCricle",uploadImage.array('image',1), homePageController.createImgCircle)
   .get("/getImgCircle", homePageController.getSliderCircle)
   .delete('/deleteSliderCircle/:circleId', homePageController.deleteSliderCircle)
 

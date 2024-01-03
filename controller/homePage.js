@@ -8,10 +8,46 @@ const ImgGridDB = require("../model/ImgGrid");
 
 exports.createImgCircle = async (req, res) => {
   try {
-    const slider = await SliderDB.create(req.body);
+    const imageUrl = req.files
+      .filter((file) => file.fieldname === 'image')
+      .map((file) => file.location);
+
+    const { ...circles } = req.body;
+    console.log(circles);
+
+    const convertToSchemaType = (inputData) => {
+      const result = { circles: [] };
+    
+      for (const key in inputData) {
+        if (inputData.hasOwnProperty(key)) {
+          const match = key.match(/^circles\[(\d+)\]\.(\w+)$/);
+          if (match) {
+            const index = parseInt(match[1]);
+            const field = match[2];
+    
+            if (!result.circles[index]) {
+              result.circles[index] = {};
+            }
+    
+            result.circles[index][field] = field === 'productPrice' ? Number(inputData[key]) : inputData[key];
+          }
+        }
+      }
+    
+      return result;
+    };
+    const formattedCircles = convertToSchemaType(circles);
+
+    const sliderInstance = new SliderDB({
+      imgSrc: imageUrl.join(''),
+      circles: formattedCircles,
+    });
+
+    await sliderInstance.save();
     res.status(201).json({ message: "Slider created successfully!..." });
+
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json({ message: error.message });
   }
 }
 
@@ -24,7 +60,7 @@ exports.getSliderCircle = async (req, res) => {
     const sliders = await SliderDB.find();
     const length = sliders.length;
     let result = sliders.slice(skip, lastIndex);
-    res.status(200).json({result, length });
+    res.status(200).json({ result, length });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }
