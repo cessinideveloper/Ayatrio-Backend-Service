@@ -84,9 +84,9 @@ router
 
 //------------------map endpoints
 router
-  .post("/createMapPlaces", mapController.createMapPlaces)
+  .post("/createMapPlaces", uploadImage.array('image',4), mapController.createMapPlaces)
   .get("/mapPlaces", mapController.getMapPlaces)
-  .delete("/mapPlaces/:id", mapController.deleteMapPlaces);
+  .delete("/mapPlaces/:mapId", mapController.deleteMapPlaces);
 
 // ----------------- profileContent
 router

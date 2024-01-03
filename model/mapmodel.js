@@ -25,7 +25,7 @@ const mapSchema = mongoose.Schema({
   },
   thumbnail: {
     type: String,
-    required: true,
+    required: false,
   },
   images: [
     {
