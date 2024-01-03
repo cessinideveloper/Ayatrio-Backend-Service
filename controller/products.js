@@ -188,6 +188,7 @@ exports.deleteProductById = async (req, res) => {
     }
 };
 
+// GET:  '/api/relatedproducts'
 exports.fetchProductsByCategory = async (req, res) => {
     const category = req.query.category;
 
