@@ -219,9 +219,45 @@ exports.deleteImgSection = async (req, res) => {
 
 exports.createImgGrid = async (req, res) => {
   try {
-    const imgGrid = await ImgGridDB.create(req.body);
-    res.status(201).json({ message: "Img grid created successfully!..." });
-  } catch (error) {
+    const imageUrl = req.files
+      .filter((file) => file.fieldname === 'image')
+      .map((file) => file.location);
+
+    const { category, ...circles } = req.body;
+
+    const convertToSchemaType = (inputData) => {
+      const result = { circles: [] };
+
+      for (const key in inputData) {
+        if (inputData.hasOwnProperty(key)) {
+          const match = key.match(/^circles\[(\d+)\]\.(\w+)$/);
+          if (match) {
+            const index = parseInt(match[1]);
+            const field = match[2];
+
+            if (!result.circles[index]) {
+              result.circles[index] = {};
+            }
+
+            result.circles[index][field] = field === 'productPrice' ? Number(inputData[key]) : inputData[key];
+          }
+        }
+      }
+
+      return result;
+    };
+    const formattedCircles = convertToSchemaType(circles);
+
+    const imgGridInstance = new ImgGridDB({
+      imgSrc: imageUrl.join(''),
+      circles: formattedCircles,
+      category
+    });
+
+    await imgGridInstance.save();
+    res.status(201).json({ message: "Image grid created successfully!..." });
+
+  }  catch (error) {
     res.status(500).json(error);
   }
 }

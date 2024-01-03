@@ -62,7 +62,7 @@ router
   .delete('/deleteImgSection/:imgId', homePageController.deleteImgSection);
 
 router
-  .post("/gridImg", homePageController.createImgGrid)
+  .post("/gridImg",uploadImage.array('image',1), homePageController.createImgGrid)
   .get("/gridImg", homePageController.getImgGrid)
   .delete('/gridImg/:imgGridId', homePageController.deleteImgGrid);
 
