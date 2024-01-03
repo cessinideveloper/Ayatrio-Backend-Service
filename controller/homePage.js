@@ -13,27 +13,26 @@ exports.createImgCircle = async (req, res) => {
       .map((file) => file.location);
 
     const { ...circles } = req.body;
-    console.log(circles);
 
     const convertToSchemaType = (inputData) => {
       const result = { circles: [] };
-    
+
       for (const key in inputData) {
         if (inputData.hasOwnProperty(key)) {
           const match = key.match(/^circles\[(\d+)\]\.(\w+)$/);
           if (match) {
             const index = parseInt(match[1]);
             const field = match[2];
-    
+
             if (!result.circles[index]) {
               result.circles[index] = {};
             }
-    
+
             result.circles[index][field] = field === 'productPrice' ? Number(inputData[key]) : inputData[key];
           }
         }
       }
-    
+
       return result;
     };
     const formattedCircles = convertToSchemaType(circles);
@@ -62,7 +61,7 @@ exports.getSliderCircle = async (req, res) => {
     let result = sliders.slice(skip, lastIndex);
     res.status(200).json({ result, length });
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ message: error.message });
   }
 }
 
@@ -93,7 +92,7 @@ exports.createMidInfoSection = async (req, res) => {
     const info = await MidInfoSectionDB.create(req.body);
     res.status(201).json({ message: "Mid Section added successfully! " });
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ message: error.message });
   }
 }
 
@@ -102,7 +101,7 @@ exports.getMidInfoSection = async (req, res) => {
     const info = await MidInfoSectionDB.find();
     res.status(200).json(info);
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ message: error.message });
   }
 }
 
@@ -142,7 +141,7 @@ exports.getHeaderInfoSection = async (req, res) => {
     const info = await HeaderInfoDB.find();
     res.status(200).json(info);
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ message: error.message });
   }
 }
 exports.deleteHeaderInfoSection = async (req, res) => {
@@ -169,10 +168,22 @@ exports.deleteHeaderInfoSection = async (req, res) => {
 
 exports.createImgSection = async (req, res) => {
   try {
-    const info = await ImgSchemaDB.create(req.body);
+    const imageUrl = req.files
+      .filter((file) => file.fieldname === 'image')
+      .map((file) => file.location);
+
+    const { text } = req.body;
+    console.log(text);
+
+    const imageInfo = new ImgSchemaDB({
+      img: imageUrl.join(''),
+      text
+    })
+    const imgSection = await imageInfo.save();
+
     res.status(201).json({ message: "Images Section added successfully! " });
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).json({ message: error.message });
   }
 }
 
@@ -181,7 +192,7 @@ exports.getImgSection = async (req, res) => {
     const info = await ImgSchemaDB.find();
     res.status(200).json(info);
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ message: error.message });
   }
 }
 exports.deleteImgSection = async (req, res) => {
@@ -221,7 +232,7 @@ exports.getImgGrid = async (req, res) => {
     const imgGrid = await ImgGridDB.find();
     res.status(200).json(imgGrid);
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ message: error.message });
   }
 }
 

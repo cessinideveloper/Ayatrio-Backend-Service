@@ -57,7 +57,7 @@ router
 
 
 router
-  .post("/createImgSection", homePageController.createImgSection)
+  .post("/createImgSection",uploadImage.array('image',1), homePageController.createImgSection)
   .get("/getImgSection", homePageController.getImgSection)
   .delete('/deleteImgSection/:imgId', homePageController.deleteImgSection);
 
