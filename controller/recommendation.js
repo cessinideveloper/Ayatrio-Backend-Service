@@ -1,7 +1,6 @@
 const preferencesDB = require("../model/Preferences");
 const productsDB = require("../model/Products");
 
-
 // POST: api/preferences
 exports.preferences = async (req, res) => {
   try {
@@ -9,72 +8,49 @@ exports.preferences = async (req, res) => {
       return res.status(400).json({ error: "Please provide category data" });
     }
 
-    const {
-      deviceId,
-      userPreferredCities,
-      userPreferredHobbies,
-      userPreferredCategories,
-    } = req.body;
+    const { deviceId, userPreferredCities, userPreferredHobbies, userPreferredCategories } = req.body;
 
-    console.log(
-      deviceId,
-      userPreferredCities,
-      userPreferredHobbies,
-      userPreferredCategories
-    );
-    if (
-      !deviceId ||
-      !userPreferredCities ||
-      !userPreferredHobbies ||
-      !userPreferredCategories
-    ) {
+    if (!deviceId || !userPreferredCities || !userPreferredHobbies || !userPreferredCategories) {
       return res.status(400).json({ error: "Fill in all the required fields" });
     }
+
+    // Validation for userPreferredCategories
+    if (!Array.isArray(userPreferredCategories) || userPreferredCategories.some(category => typeof category !== 'object' || !category.name || !category.subcategories || !Array.isArray(category.subcategories))) {
+      return res.status(400).json({ error: "Invalid format for userPreferredCategories" });
+    }
+
+    // Combine all the subcategories
+    const subcategoriesArray = combineSubcategories(userPreferredCategories);
+
+    // Send recommendations
+    const recommendedProducts = await productsDB.find({
+      subcategory: {
+        $in: subcategoriesArray.map(sub => new RegExp(sub, "i")),
+      },
+    });
+
+    // Filter only product Id to store in DB
+    const productIdsArray = recommendedProducts.map(product => product._id);
 
     const newPreference = new preferencesDB({
       deviceId,
       preferredCities: userPreferredCities,
       preferredHobbies: userPreferredHobbies,
       preferredCategories: userPreferredCategories,
+      recommendedProducts: productIdsArray
     });
 
-    const userPreferences = await newPreference.save();
+    // Save recommendations in DB
+    const recommendation = await newPreference.save();
 
-    console.log("hey", userPreferences);
+    res.status(201).json({ message: "Preferences stored in successfully..!" });
 
-    if (!userPreferences || userPreferences.length === 0) {
-      return res.status(404).json({ error: "Preferences not found" });
-    }
-
-    const { preferredCities, preferredHobbies, preferredCategories } =
-      userPreferences;
-
-    if (!preferredCities || !preferredHobbies || !preferredCategories) {
-      return res
-        .status(404)
-        .json({ error: "Invalid user preferences structure" });
-    }
-
-    const subcategoriesArray = combineSubcategories(preferredCategories);
-
-    console.log(subcategoriesArray);
-    console.log(preferredCategories);
-
-    const products = await productsDB.find({
-      subcategory: {
-        $in: subcategoriesArray.map((sub) => new RegExp(sub, "i")),
-      },
-    });
-
-    res.status(201).json({ products });
   } catch (error) {
     console.error(error);
 
     if (error.code === 11000) {
       // Duplicate key error
-      return res
-        .status(409)
-        .json({ error: "Duplicate entry for deviceId", deviceId });
+      return res.status(409).json({ error: "Duplicate entry for deviceId", deviceId });
     }
 
     res.status(500).json({
@@ -89,10 +65,10 @@ exports.preferences = async (req, res) => {
 function combineSubcategories(categories) {
   let combinedSubcategories = [];
 
-  categories.forEach((category) => {
-    combinedSubcategories = combinedSubcategories.concat(
-      category.subcategories
-    );
+  categories.forEach(category => {
+    if (category.subcategories && Array.isArray(category.subcategories)) {
+      combinedSubcategories = combinedSubcategories.concat(category.subcategories);
+    }
   });
 
   return combinedSubcategories;
@@ -105,40 +81,19 @@ exports.getRecommendation = async (req, res) => {
   try {
     const deviceId = req.query.deviceId;
 
-    const userPreferences = await preferencesDB.find({ deviceId });
+    const recommendations = await preferencesDB.find({ deviceId }, { recommendedProducts: 1 })
+      .populate({
+        path: 'recommendedProducts',
+        select: 'productId productTitle price images category subcategory perUnitPrice totalPrice', 
+      }) // Populate the recommendedProducts field
+      .exec();;
 
-    if (!userPreferences || userPreferences.length === 0) {
-      // Handle the case where no preferences are found for the given device ID
+    if (!recommendations || recommendations.length === 0) {
       return res.status(404).json({ error: "Preferences not found" });
     }
+    const noOfProducts = recommendations[0].recommendedProducts.length;
 
-    const { preferredCities, preferredHobbies, preferredCategories } =
-      userPreferences[0];
-
-    function combineSubcategories(categories) {
-      let combinedSubcategories = [];
-
-      categories.forEach((category) => {
-        combinedSubcategories = combinedSubcategories.concat(
-          category.subcategories
-        );
-      });
-
-      return combinedSubcategories;
-    }
-
-    let subcategoriesArray = combineSubcategories(preferredCategories);
-
-    console.log(subcategoriesArray);
-    console.log(preferredCategories);
-const TotalProducts = await productsDB.find();
-console.log(TotalProducts.length);
-    const products = await productsDB.find({
-      subcategory: {
-        $in: subcategoriesArray.map((sub) => new RegExp(sub, "i")),
-      },
-    });
-    res.json({ products, length: products.length });
+    res.json({ recommendations, length: noOfProducts });
   } catch (error) {
     console.error(error);
     // Handle other errors

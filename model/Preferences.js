@@ -6,12 +6,19 @@ const CategorySchema = mongoose.Schema({
 });
 
 const PreferencesScehma = mongoose.Schema({
-    deviceId: { type: String,  required: true, unique: true },
+    deviceId: { type: String, required: true, unique: true },
     preferredCities: { type: [String], required: true },
     preferredHobbies: { type: [String] },
-    preferredCategories:{type:[CategorySchema]}
+    preferredCategories: { type: [CategorySchema] },
+    // recommanded products 👇
+    recommendedProducts: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'products' // Reference to the Product collection
+        }
+    ]
 });
 
-const preferencesDB = new mongoose.model("preferences",PreferencesScehma);
+const preferencesDB = new mongoose.model("preferences", PreferencesScehma);
 
 module.exports = preferencesDB;
